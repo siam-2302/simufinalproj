@@ -1,4 +1,5 @@
 import streamlit as st
+import os
 
 # App Title and Introduction
 st.title("Welcome to the Simulation App")
@@ -39,16 +40,16 @@ if page == "Introduction":
 # Page Navigation to Individual Simulations
 elif page == "Simulation 1":
     st.header("Number Guessing Simulation")
-    # Add your code for Simulation 1 here
+    exec(open("pages/1_Number_Guessing.py").read())
 
 elif page == "Simulation 2":
     st.header("Dynamic ATM Simulation")
-    # Add your code for Simulation 2 here
+    exec(open("pages/2_Dynamic_Atm.py").read())
 
 elif page == "Simulation 3":
     st.header("Analyzing Biased Dice Rolls")
-    # Add your code for Simulation 3 here
+    exec(open("pages/3_Biased_Dice_Rolls.py").read())
 
 elif page == "Simulation 4":
     st.header("Monte Carlo Dice Simulation")
-    # Add your code for Simulation 4 here
+    exec(open("pages/4_Monte_Carlo_Dice.py").read())
