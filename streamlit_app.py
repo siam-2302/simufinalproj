@@ -1,17 +1,14 @@
 import streamlit as st
+import os
 
 # App Title and Introduction
 st.title("Welcome to the Simulation App")
 st.write("""
-This app provides various simulations to help you understand different scenarios and processes. 
-Use the sidebar to navigate through the simulations.
+This app provides various simulations to help you understand different scenarios and processes.
 """)
 
-# Navigation Section
-st.sidebar.title("Navigate to Simulations")
-
 # Page Navigation
-page = st.sidebar.radio(
+page = st.selectbox(
     "Select a page:",
     ("Introduction", "Simulation 1", "Simulation 2", "Simulation 3", "Simulation 4")
 )
@@ -37,7 +34,7 @@ if page == "Introduction":
     """)
 
 # Page Navigation to Individual Simulations
-elif page == "Simulation 1":
+if page == "Simulation 1":
     st.header("Number Guessing Simulation")
     exec(open("pages/1_Number_Guessing.py").read())
 
