@@ -1,5 +1,4 @@
 import streamlit as st
-import os
 
 # App Title and Introduction
 st.title("Welcome to the Simulation App")
