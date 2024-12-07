@@ -1,4 +1,6 @@
 import random
+import matplotlib
+matplotlib.use('Agg')  # Ensure correct backend for Streamlit
 import matplotlib.pyplot as plt
 import streamlit as st
 
