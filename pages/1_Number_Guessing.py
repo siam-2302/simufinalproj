@@ -1,24 +1,21 @@
 import random
-import time
 import matplotlib.pyplot as plt
-import streamlit as st
+import time
 from collections import deque
 
-# Colors and Simulation Data Storage
-attempts = deque(maxlen=1000)  # Limit max attempts for better performance
-guesses = deque(maxlen=1000)
+# Global variables for storing attempts and guesses
+attempts = []
+guesses = []
 
-# Define Guessing Function
-def guess(mode, secret_number):
-    """Run the guessing simulation in the selected mode."""
+def guess(mode):
+    secret_number = random.randint(1, 100000)
     low = 1
     high = 100000
     attempt = 0
     found = False
-    st.session_state.progress_bar = st.progress(0)
-    
+
     while not found:
-        # Guess logic
+        # Guess logic for each mode
         if mode == 1:  # Random Guess Mode
             current_guess = random.randint(low, high)
         elif mode == 2:  # Binary Search Mode
@@ -38,30 +35,26 @@ def guess(mode, secret_number):
             current_guess = mid
         elif mode == 5:  # Logarithmic Search Mode
             current_guess = low + int((high - low) / (2 ** (attempt / 10 + 1)))
-        
+
         # Record data
         attempt += 1
         attempts.append(attempt)
         guesses.append(current_guess)
-        
-        # Update Progress
-        progress = min(attempt / 1000, 1.0)
-        st.session_state.progress_bar.progress(progress)
-        
+
         # Evaluate guess
         if current_guess == secret_number:
+            print(f"Success! Guessed the number {secret_number} in {attempt} attempts!")
             found = True
-            st.success(f"Success! Guessed the number {secret_number} in {attempt} attempts!")
         elif current_guess < secret_number:
             low = current_guess + 1
         else:
             high = current_guess - 1
-        
-        # Plot Progress
-        plot_progress(mode, attempt, current_guess, low, high)
+
+        # Plot progress after every 10 attempts
+        if attempt % 10 == 0 or found:
+            plot_progress(mode, attempt, current_guess, low, high)
 
 def plot_progress(mode, attempt, current_guess, low, high):
-    """Plot progress dynamically in Streamlit."""
     mode_titles = {
         1: 'Random Guess Mode',
         2: 'Binary Search Mode',
@@ -70,7 +63,7 @@ def plot_progress(mode, attempt, current_guess, low, high):
         5: 'Logarithmic Search Mode'
     }
     title = mode_titles.get(mode, 'Unknown Mode')
-    
+
     plt.figure(figsize=(10, 5))
     plt.plot(attempts, guesses, 'b-o', label="Guesses")
     plt.axhline(low, color='g', linestyle='--', label="Lower Bound")
@@ -81,30 +74,29 @@ def plot_progress(mode, attempt, current_guess, low, high):
     plt.title(f"{title}\nTotal Attempts: {attempt}")  
     plt.legend()
     plt.grid(True)
-    st.pyplot(plt)
+    plt.show()
 
-# Streamlit App
-st.title("Number Guessing Simulation")
-st.sidebar.header("Configuration")
+# Example usage
+if __name__ == "__main__":
+    while True:
+        print("Choose the guessing mode:")
+        print("1: Random Guess Mode")
+        print("2: Binary Search Mode")
+        print("3: Ternary Search Mode")
+        print("4: Golden Ratio Search Mode")
+        print("5: Logarithmic Search Mode")
+        print("6: Exit")
 
-# Sidebar Inputs
-mode = st.sidebar.selectbox(
-    "Choose Guessing Mode",
-    [1, 2, 3, 4, 5],
-    format_func=lambda x: {
-        1: 'Random Guess Mode',
-        2: 'Binary Search Mode',
-        3: 'Ternary Search Mode',
-        4: 'Golden Ratio Search Mode',
-        5: 'Logarithmic Search Mode'
-    }[x]
-)
-start_simulation = st.sidebar.button("Start Simulation")
-
-# Main Area
-if start_simulation:
-    st.write(f"Running simulation in **{mode}** mode...")
-    attempts.clear()
-    guesses.clear()
-    secret_number = random.randint(1, 100000)
-    guess(mode, secret_number)
+        try:
+            mode = int(input("Enter the mode (1, 2, 3, 4, 5, or 6): "))
+            if mode == 6:
+                print("Exiting the simulation. Goodbye!")
+                break
+            elif mode not in [1, 2, 3, 4, 5]:
+                print("Invalid mode selected. Try again.")
+            else:
+                attempts.clear()
+                guesses.clear()
+                guess(mode)
+        except ValueError:
+            print("Invalid input. Please enter a number.")
